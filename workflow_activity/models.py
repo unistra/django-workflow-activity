@@ -27,6 +27,7 @@ import workflows.models
 from workflows.utils import get_allowed_transitions
 from workflows.utils import get_state
 from workflows.utils import set_state
+from workflows.utils import set_workflow
 
 from . import managers
 from .utils import get_ending_states
@@ -266,6 +267,13 @@ class WorkflowManagedInstance(models.Model):
             return self.last_action().previous_state
         except Action.DoesNotExist:
             return None
+
+    def set_workflow(self, workflow_name):
+        """
+        set a workflow to the object
+        """
+        workflow = workflows.models.Workflow.objects.get(name=workflow_name)
+        set_workflow(self, workflow)
 
 
 @receiver(m2m_changed, sender=workflows.models.State.transitions.through)
