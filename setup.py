@@ -32,7 +32,7 @@ recursive_requirements('requirements.txt', libraries, dependency_links)
 
 setup(
     name = "django-workflow-activity",
-    version = 1.0,
+    version = "1.0.2",
     packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
 
     install_requires=libraries,
@@ -43,16 +43,15 @@ setup(
     author_email = 'arnaud.grausem@unistra.fr',
     description = 'Manage all events on workflows',
     keywords = "workflows django events log",
-    url = 'https://github.com/unista/django-workflow-activity',
+    url = 'https://github.com/unistra/django-workflow-activity',
 
-    classifiers = ['Development Status :: 5 - Stable',
+    classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Web Environment',
                    'Framework :: Django',
-                   'Intended Audience :: End Users/Desktop'
-                   'Natural Language :: French',
+                   'Intended Audience :: Developers',
                    'Natural Language :: English',
-                   'Operating System :: POSIX :: Linux'
-                   'Programming Language :: Python  :: 2.7',
+                   'Operating System :: POSIX :: Linux',
+                   'Programming Language :: Python :: 2.7',
                    'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
     ],
 
