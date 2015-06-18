@@ -1,1 +1,2 @@
 django-workflows
+django-model-utils
