@@ -5,7 +5,6 @@
 
 from django.db.models.query import QuerySet
 from django.contrib.auth.models import User
-from django.contrib.flatpages.models import FlatPage
 from django.test import TestCase
 import permissions
 from workflows.tests import create_workflow
@@ -16,24 +15,14 @@ from workflows.models import Transition
 from workflows.models import Workflow
 from workflows.models import WorkflowPermissionRelation
 
-from .models import Action
-from .models import WorkflowManagedInstance
-from .models import changed_state
-from .utils import get_ending_states
+from workflow_activity.models import Action
+from workflow_activity.models import WorkflowManagedInstance
+from workflow_activity.models import changed_state
+from workflow_activity.utils import get_ending_states
 
+from .models import FlatPage
 
 # patch FlatPage to make work inheritance with WorkflowManagedInstance
-del FlatPage.objects
-FlatPage.__bases__ = (WorkflowManagedInstance, )
-for manager in ('objects', 'ended', 'pending'):
-    manager =  getattr(FlatPage, manager)
-    manager.model = FlatPage
-    manager._inherited = True
-for field_name in ('state_relation', 'actions'):
-    field = WorkflowManagedInstance._meta.get_field_by_name(field_name)[0]
-    field.model = FlatPage
-    FlatPage._meta.add_field(field)
-FlatPage._meta.add_field(FlatPage.initializer.field)
 
 
 class ActionTest(TestCase):
@@ -52,7 +41,7 @@ class ActionTest(TestCase):
             transition=self.make_public, previous_state=self.private,
             content_object=self.flat_page)
         self.assertEqual(action.__unicode__(),
-            u'page statique #1 - Standard - Test User - Make public')
+            u'flat page #1 - Standard - Test User - Make public')
 
 
 class WorkflowManagedInstanceTest(TestCase):
@@ -315,9 +304,9 @@ class WorkflowInstanceManager(TestCase):
 
 
     def test_pending_manager(self):
-        set_workflow(self.first_page, self.w)
-        set_workflow(self.second_page, self.w)
-        set_workflow(self.third_page, self.w)
+        self.first_page.set_workflow(self.w.name)
+        self.second_page.set_workflow(self.w.name)
+        self.third_page.set_workflow(self.w.name)
 
         result = FlatPage.pending.all()
         self.assertListEqual(list(result), [self.first_page, self.second_page,
@@ -351,6 +340,7 @@ class WorkflowInstanceManager(TestCase):
 class EndingStatesTest(TestCase):
     """
     """
+
 
     def test_get_ending_states(self):
         """

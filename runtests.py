@@ -17,10 +17,10 @@ if not settings.configured:
             'django.contrib.sites',                                                     
             'django.contrib.messages',                                                  
             'django.contrib.staticfiles',                                               
-            'django.contrib.flatpages',                                                 
             'workflows',
             'permissions',
             'workflow_activity',
+            'tests'
         ),
         MIDDLEWARE_CLASSES = (
             'django.middleware.common.CommonMiddleware',

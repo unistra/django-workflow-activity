@@ -32,10 +32,10 @@ class PendingManager(PassThroughManager):
     workflow
     """
 
-    def get_query_set(self):
+    def get_queryset(self):
         """ Only the instances that are in non ending states 
         """
-        return super(PendingManager, self).get_query_set()\
+        return super(PendingManager, self).get_queryset()\
             .filter(state_relation__state__isnull=False)\
             .exclude(state_relation__state__transitions__isnull=True)
 
@@ -60,8 +60,9 @@ class EndedManager(PassThroughManager):
     of a workflow
     """
 
-    def get_query_set(self):
+    def get_queryset(self):
         """ Only the instances that are in ending states 
         """
-        return super(EndedManager, self).get_query_set()\
+        return super(EndedManager, self).get_queryset()\
+            .filter(state_relation__state__isnull=False)\
             .filter(state_relation__state__transitions__isnull=True)

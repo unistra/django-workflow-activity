@@ -107,8 +107,13 @@ class Action(models.Model):
 
 
     def __unicode__(self):
-        return u'{0.content_type} #{0.object_id} - {0.workflow} - ' \
-            '{0.actor.first_name} {0.actor.last_name} - {0.transition}'\
+        return u'{0.content_type} #{0.object_id} - {0.workflow.name} - ' \
+            '{0.actor.first_name} {0.actor.last_name} - {0.transition.name}'\
+            .format(self)
+
+    def __str__(self):
+        return '{0.content_type} #{0.object_id} - {0.workflow.name} - ' \
+            '{0.actor.first_name} {0.actor.last_name} - {0.transition.name}'\
             .format(self)
 
 
