@@ -3,8 +3,8 @@ django-workflow-activity
 .. image:: https://travis-ci.org/unistra/django-workflow-activity.svg?branch=master
     :target: https://travis-ci.org/unistra/django-workflow-activity
 
-.. image:: https://coveralls.io/repos/unistra/django-workflow-activity/badge.svg
-    :target: https://coveralls.io/r/unistra/django-workflow-activity
+.. image:: https://coveralls.io/repos/unistra/django-workflow-activity/badge.svg?branch=master
+    :target: https://coveralls.io/r/unistra/django-workflow-activity?branch=master
 
 Install
 -------
