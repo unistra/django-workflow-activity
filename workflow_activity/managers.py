@@ -9,14 +9,11 @@ plugged into the WorkflowManagedInstance model and are also available in each
 model that inherits the WorkflowManagedInstance model.
 """
 
-from django.db.models.query import QuerySet
-from model_utils.managers import PassThroughManager
+from django.db import models
 
 
-
-class WorkflowManagedInstanceBaseQuerySet(QuerySet):
-    """ Base for all managers of workflow managed instances.
-    """
+class BaseQuerySet(models.QuerySet):
+    """ Base queryset for all workflow managed instances managers."""
 
     def by_state(self, state_name):
         """ Search workflow managed instances by state
@@ -27,17 +24,8 @@ class WorkflowManagedInstanceBaseQuerySet(QuerySet):
         return self.filter(state_relation__state__name=state_name)
 
 
-class PendingManager(PassThroughManager):
-    """ Manager that filters the instances that are currently managed by a
-    workflow
-    """
-
-    def get_queryset(self):
-        """ Only the instances that are in non ending states 
-        """
-        return super(PendingManager, self).get_queryset()\
-            .filter(state_relation__state__isnull=False)\
-            .exclude(state_relation__state__transitions__isnull=True)
+class PendingQuerySet(BaseQuerySet):
+    """ Base queryset for pending workflow managed instances managers."""
 
     def editable_by_roles(self, roles, edit='edit'):
         """ Only the instances that are editable by some roles (based on
@@ -55,13 +43,26 @@ class PendingManager(PassThroughManager):
         )
 
 
-class EndedManager(PassThroughManager):
+class PendingManager(models.Manager):
+    """ Manager that filters the instances that are currently managed by a
+    workflow
+    """
+
+    def get_queryset(self):
+        """ Only the instances that are in non ending states
+        """
+        return super(PendingManager, self).get_queryset()\
+            .filter(state_relation__state__isnull=False)\
+            .exclude(state_relation__state__transitions__isnull=True)
+
+
+class EndedManager(models.Manager):
     """ Manager that filters the instances that are currently in a ended state
     of a workflow
     """
 
     def get_queryset(self):
-        """ Only the instances that are in ending states 
+        """ Only the instances that are in ending states
         """
         return super(EndedManager, self).get_queryset()\
             .filter(state_relation__state__isnull=False)\

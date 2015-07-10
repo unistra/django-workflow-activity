@@ -41,7 +41,7 @@ changed_state = Signal(providing_args=['transition', 'actor',
 class Action(models.Model):
     """ This model is an history logger for actions made on a managed worklow
     instance. The following informations were made available : ::
-        
+
     .. py:attribute:: actor
 
         The last actor for the processed workflow on the instance
@@ -135,11 +135,11 @@ class WorkflowManagedInstance(models.Model):
         user who initiates the workflow on instance (can be null)
 
     .. py:attribute:: creation_date
-        
+
         date of creation of the managed instance
     """
 
-    actions = generic.GenericRelation(Action, 
+    actions = generic.GenericRelation(Action,
             content_type_field='content_type',
             object_id_field='object_id')
     state_relation = generic.GenericRelation('workflows.StateObjectRelation',
@@ -154,10 +154,9 @@ class WorkflowManagedInstance(models.Model):
         abstract = True
 
 
-    objects = PassThroughManager(managers.WorkflowManagedInstanceBaseQuerySet)
-    pending = managers.PendingManager(
-            managers.WorkflowManagedInstanceBaseQuerySet)
-    ended = managers.EndedManager(managers.WorkflowManagedInstanceBaseQuerySet)
+    objects = managers.BaseQuerySet.as_manager()
+    pending = managers.PendingManager.from_queryset(managers.PendingQuerySet)()
+    ended = managers.EndedManager.from_queryset(managers.BaseQuerySet)()
 
 
     @property
