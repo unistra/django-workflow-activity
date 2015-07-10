@@ -14,20 +14,20 @@ data on each action made by a user through an application interface
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.db import models
+from django.db import models, transaction
 from django.dispatch import receiver
 from django.dispatch import Signal
 from django.db.models.signals import m2m_changed
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
-from model_utils.managers import PassThroughManager
 from permissions.utils import has_permission
 import workflows.models
 from workflows.utils import get_allowed_transitions
 from workflows.utils import get_state
 from workflows.utils import set_state
-from workflows.utils import set_workflow
+from workflows.utils import set_workflow_for_object
+from workflows.utils import get_workflow_for_model
 
 from . import managers
 from .utils import get_ending_states
@@ -272,12 +272,34 @@ class WorkflowManagedInstance(models.Model):
         except Action.DoesNotExist:
             return None
 
-    def set_workflow(self, workflow_name):
-        """
-        set a workflow to the object
-        """
-        workflow = workflows.models.Workflow.objects.get(name=workflow_name)
-        set_workflow(self, workflow)
+    def set_workflow(self, workflow):
+        """ Initiate a workflow for instance. """
+        if self.state is None:
+            if not workflow:
+                ctype = ContentType.objects.get_for_model(self)
+                workflow = get_workflow_for_model(ctype)
+            set_workflow_for_object(self, workflow)
+
+    def remove_workflow(self):
+        """ Remove entirely a worflow for an instance. """
+
+        ctype = ContentType.objects.get_for_model(self)
+        try:
+            workflow = self.state.workflow
+            wor = workflows.models.WorkflowObjectRelation.objects.get(
+                content_type=ctype, content_id=self.pk
+            )
+            sor = workflows.models.StateObjectRelation.objects.get(
+                content_type=ctype, content_id=self.pk
+            )
+        except workflows.models.WorkflowObjectRelation.DoesNotExist:
+            pass
+        except workflows.models.StateObjectRelation.DoesNotExist:
+            pass
+
+        with transaction.atomic():
+            wor.delete()
+            sor.delete()
 
 
 @receiver(m2m_changed, sender=workflows.models.State.transitions.through)
