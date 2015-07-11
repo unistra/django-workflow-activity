@@ -32,7 +32,7 @@ recursive_requirements('requirements.txt', libraries, dependency_links)
 
 setup(
     name = "django-workflow-activity",
-    version = "1.0.4",
+    version = "1.0.5",
     packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
 
     install_requires=libraries,
