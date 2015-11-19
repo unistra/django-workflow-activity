@@ -27,8 +27,5 @@ class ActionAdmin(admin.ModelAdmin):
         return '{0.content_type} #{0.object_id}'.format(obj)
     content_object_display.short_description = _('Model instance')
 
-    def actor_name(self, obj):
-        return '{0.actor.last_name} {0.actor.first_name}'.format(obj)
-    actor_name.short_description = _('Actor')
 
 admin.site.register(Action, ActionAdmin)

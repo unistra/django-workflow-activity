@@ -105,16 +105,19 @@ class Action(models.Model):
         verbose_name = _('Action')
         verbose_name_plural = _('Actions')
 
+    def actor_name(self):
+        return u'{0.first_name} {0.last_name}'.format(self.actor) \
+                if self.actor else u'Auto'
+    actor_name.short_description = _('Actor')
+    property(actor_name)
 
     def __unicode__(self):
         return u'{0.content_type} #{0.object_id} - {0.workflow.name} - ' \
-            '{0.actor.first_name} {0.actor.last_name} - {0.transition.name}'\
-            .format(self)
+            '{0.actor_name} - {0.transition.name}'.format(self)
 
     def __str__(self):
         return '{0.content_type} #{0.object_id} - {0.workflow.name} - ' \
-            '{0.actor.first_name} {0.actor.last_name} - {0.transition.name}'\
-            .format(self)
+            '{0.actor_name} - {0.transition.name}'.format(self) 
 
 
 class WorkflowManagedInstance(models.Model):
