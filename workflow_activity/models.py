@@ -109,7 +109,7 @@ class Action(models.Model):
         return u'{0.first_name} {0.last_name}'.format(self.actor) \
                 if self.actor else u'Auto'
     actor_name.short_description = _('Actor')
-    property(actor_name)
+    actor_name = property(actor_name)
 
     def __unicode__(self):
         return u'{0.content_type} #{0.object_id} - {0.workflow.name} - ' \
