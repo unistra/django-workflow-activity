@@ -104,6 +104,7 @@ class Action(models.Model):
     class Meta:
         verbose_name = _('Action')
         verbose_name_plural = _('Actions')
+        app_label = 'workflow_activity'
 
     def actor_name(self):
         return u'{0.first_name} {0.last_name}'.format(self.actor) \
