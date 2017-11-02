@@ -12,8 +12,11 @@ data on each action made by a user through an application interface
 
 """
 
+
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
+
 from django.db import models, transaction
 from django.dispatch import receiver
 from django.dispatch import Signal
@@ -98,7 +101,7 @@ class Action(models.Model):
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
 
     class Meta:
@@ -143,10 +146,10 @@ class WorkflowManagedInstance(models.Model):
         date of creation of the managed instance
     """
 
-    actions = generic.GenericRelation(Action,
+    actions = GenericRelation(Action,
             content_type_field='content_type',
             object_id_field='object_id')
-    state_relation = generic.GenericRelation('workflows.StateObjectRelation',
+    state_relation = GenericRelation('workflows.StateObjectRelation',
             object_id_field='content_id')
     initializer = models.ForeignKey('auth.User', verbose_name=_('Initializer'),
         related_name='initiated_%(class)ss'.lower(), null=True)
