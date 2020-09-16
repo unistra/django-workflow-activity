@@ -12,6 +12,7 @@ data on each action made by a user through an application interface
 
 """
 
+from django.conf import settings
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -86,7 +87,7 @@ class Action(models.Model):
 
     """
 
-    actor = models.ForeignKey('auth.User', verbose_name=_('Actor'),
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('Actor'),
             related_name='workflow_actions', null=True)
     process_date = models.DateTimeField(verbose_name=_('Creation date'),
             auto_now_add=True)
