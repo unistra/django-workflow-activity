@@ -84,19 +84,19 @@ class Action(models.Model):
     """
 
     actor = models.ForeignKey('auth.User', verbose_name=_('Actor'),
-            related_name='workflow_actions', null=True)
+            related_name='workflow_actions', null=True, on_delete=models.CASCADE)
     process_date = models.DateTimeField(verbose_name=_('Creation date'),
             auto_now_add=True)
     transition = models.ForeignKey('workflows.Transition',
-            verbose_name=_('Transition'), related_name='+')
+            verbose_name=_('Transition'), related_name='+', on_delete=models.CASCADE)
     previous_state = models.ForeignKey('workflows.State',
-            verbose_name=_('Previous state'), related_name='+')
+            verbose_name=_('Previous state'), related_name='+', on_delete=models.CASCADE)
     workflow = models.ForeignKey('workflows.Workflow',
-            verbose_name=_('Workflow'), related_name='+')
+            verbose_name=_('Workflow'), related_name='+', on_delete=models.CASCADE)
     creation_date = models.DateTimeField(verbose_name=_('Date of creation'),
             auto_now_add=True)
 
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
@@ -149,7 +149,7 @@ class WorkflowManagedInstance(models.Model):
     state_relation = generic.GenericRelation('workflows.StateObjectRelation',
             object_id_field='content_id')
     initializer = models.ForeignKey('auth.User', verbose_name=_('Initializer'),
-        related_name='initiated_%(class)ss'.lower(), null=True)
+        related_name='initiated_%(class)ss'.lower(), null=True, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(verbose_name=_('Date of creation'),
             auto_now_add=True)
 
