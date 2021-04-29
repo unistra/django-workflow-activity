@@ -3,6 +3,10 @@ python: "2.7"
 env:
 - TOX_ENV=py27-dj17
 - TOX_ENV=py34-dj17
+- TOX_ENV=py27-dj18
+- TOX_ENV=py34-dj18
+install:
+install:
 install:
  - pip install tox --use-mirrors
 script: tox -e $TOX_ENV
